@@ -1,110 +1,82 @@
 "use client";
-import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { TorusKnot, Sphere, Float, MeshDistortMaterial } from "@react-three/drei";
+import { MeshDistortMaterial, Float } from "@react-three/drei";
+import { useRef } from "react";
 import * as THREE from "three";
 
-function Particles({ count = 180 }: { count?: number }) {
+function Particles() {
   const mesh = useRef<THREE.Points>(null);
-  const { positions, velocities } = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const vel = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const r = 3.5 + Math.random() * 4;
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = r * Math.cos(phi);
-      vel[i * 3] = (Math.random() - 0.5) * 0.002;
-      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.002;
-      vel[i * 3 + 2] = 0;
-    }
-    return { positions: pos, velocities: vel };
-  }, [count]);
-
-  useFrame(() => {
-    if (!mesh.current) return;
-    mesh.current.rotation.y += 0.0015;
-    mesh.current.rotation.x += 0.0005;
+  const count = 300;
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const r = 3.5 + Math.random() * 2;
+    const theta = Math.random() * Math.PI * 2;
+    const phi   = Math.acos(2 * Math.random() - 1);
+    positions[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i * 3 + 2] = r * Math.cos(phi);
+  }
+  useFrame(({ clock }) => {
+    if (mesh.current) mesh.current.rotation.y = clock.getElapsedTime() * 0.04;
   });
-
   return (
     <points ref={mesh}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute args={[positions, 3]} attach="attributes-position" />
       </bufferGeometry>
-      <pointsMaterial size={0.04} color="#00c8d7" transparent opacity={0.7} sizeAttenuation />
+      <pointsMaterial size={0.022} color="#00c8d7" transparent opacity={0.5} sizeAttenuation />
     </points>
   );
 }
 
 function MainModel() {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((state) => {
-    if (!ref.current) return;
-    ref.current.rotation.x = state.clock.elapsedTime * 0.18;
-    ref.current.rotation.y = state.clock.elapsedTime * 0.25;
-    const s = 1 + Math.sin(state.clock.elapsedTime * 0.6) * 0.03;
-    ref.current.scale.setScalar(s);
+  const mesh = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (!mesh.current) return;
+    mesh.current.rotation.x = clock.getElapsedTime() * 0.18;
+    mesh.current.rotation.y = clock.getElapsedTime() * 0.26;
   });
   return (
-    <mesh ref={ref} castShadow>
-      <torusKnotGeometry args={[1, 0.32, 160, 16, 2, 3]} />
+    <mesh ref={mesh}>
+      <torusKnotGeometry args={[1, 0.3, 180, 20, 2, 3]} />
       <MeshDistortMaterial
         color="#00c8d7"
-        emissive="#005f70"
-        emissiveIntensity={0.5}
-        metalness={0.8}
-        roughness={0.15}
-        distort={0.12}
+        metalness={0.9}
+        roughness={0.1}
+        distort={0.25}
         speed={2}
-        wireframe={false}
+        emissive="#003d42"
+        emissiveIntensity={0.4}
       />
     </mesh>
   );
 }
 
-function OuterRing() {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((state) => {
-    if (!ref.current) return;
-    ref.current.rotation.z = state.clock.elapsedTime * 0.12;
-    ref.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.4;
+function Ring({ radius, color, speed }: { radius: number; color: string; speed: number }) {
+  const mesh = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (!mesh.current) return;
+    mesh.current.rotation.x = clock.getElapsedTime() * speed;
+    mesh.current.rotation.z = clock.getElapsedTime() * speed * 0.5;
   });
   return (
-    <mesh ref={ref}>
-      <torusGeometry args={[2.2, 0.02, 8, 100]} />
-      <meshBasicMaterial color="#00c8d7" transparent opacity={0.25} />
-    </mesh>
-  );
-}
-
-function OuterRing2() {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((state) => {
-    if (!ref.current) return;
-    ref.current.rotation.z = -state.clock.elapsedTime * 0.08;
-    ref.current.rotation.y = Math.cos(state.clock.elapsedTime * 0.25) * 0.5;
-  });
-  return (
-    <mesh ref={ref}>
-      <torusGeometry args={[2.8, 0.015, 8, 100]} />
-      <meshBasicMaterial color="#f97316" transparent opacity={0.15} />
+    <mesh ref={mesh}>
+      <torusGeometry args={[radius, 0.015, 16, 120]} />
+      <meshBasicMaterial color={color} transparent opacity={0.6} />
     </mesh>
   );
 }
 
 function GlowSphere() {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((state) => {
-    if (!ref.current) return;
-    const s = 1 + Math.sin(state.clock.elapsedTime * 0.9) * 0.08;
-    ref.current.scale.setScalar(s);
+  const mesh = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (!mesh.current) return;
+    const s = 1 + Math.sin(clock.getElapsedTime() * 1.2) * 0.05;
+    mesh.current.scale.setScalar(s);
   });
   return (
-    <mesh ref={ref}>
-      <sphereGeometry args={[1.5, 32, 32]} />
+    <mesh ref={mesh}>
+      <sphereGeometry args={[1.6, 32, 32]} />
       <meshBasicMaterial color="#00c8d7" transparent opacity={0.04} side={THREE.BackSide} />
     </mesh>
   );
@@ -113,21 +85,23 @@ function GlowSphere() {
 export default function HeroScene() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 6], fov: 50 }}
-      gl={{ antialias: true, alpha: true }}
-      style={{ background: "transparent" }}
+      camera={{ position: [0, 0, 6], fov: 45 }}
+      gl={{ alpha: true, antialias: true }}
+      style={{ width: "100%", height: "100%" }}
     >
       <ambientLight intensity={0.3} />
-      <pointLight position={[5, 5, 5]} intensity={1.5} color="#00c8d7" />
-      <pointLight position={[-5, -3, -3]} intensity={0.8} color="#f97316" />
-      <pointLight position={[0, -4, 2]} intensity={0.5} color="#ffffff" />
-      <Float speed={1.5} rotationIntensity={0.4} floatIntensity={0.6}>
+      <pointLight position={[5, 5, 5]}  intensity={80} color="#00c8d7" />
+      <pointLight position={[-4, -3, 2]} intensity={40} color="#f97316" />
+      <pointLight position={[0, 0, 4]}  intensity={30} color="#ffffff" />
+
+      <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.6}>
         <MainModel />
+        <Ring radius={2.1} color="#00c8d7" speed={0.4} />
+        <Ring radius={2.7} color="#f97316" speed={-0.25} />
+        <GlowSphere />
       </Float>
-      <GlowSphere />
-      <OuterRing />
-      <OuterRing2 />
-      <Particles count={200} />
+
+      <Particles />
     </Canvas>
   );
 }

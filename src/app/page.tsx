@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import StatsBar from "@/components/StatsBar";
+import Marquee from "@/components/Marquee";
 import Services from "@/components/Services";
 import TechInnovation from "@/components/TechInnovation";
 import About from "@/components/About";
@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <Navbar />
       <Hero />
-      <StatsBar />
+      <Marquee />
       <Services />
       <TechInnovation />
       <About />

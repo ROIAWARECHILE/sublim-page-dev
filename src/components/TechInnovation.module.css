@@ -1,221 +1,149 @@
 .section {
   position: relative;
-  padding: 100px 0;
-  background: #070c1a;
+  padding: 120px 0;
+  background: var(--bg);
   overflow: hidden;
 }
 
-.bgTop {
+.bgGlow {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,200,215,0.4), transparent);
-}
-
-.glow {
-  position: absolute;
-  width: 600px;
-  height: 600px;
+  width: 800px; height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,200,215,0.07) 0%, transparent 70%);
-  top: -150px;
-  right: -100px;
+  background: radial-gradient(ellipse, rgba(0,200,215,0.07) 0%, transparent 65%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(60px);
   pointer-events: none;
 }
 
-/* ── Layout ─────────────────────────────────── */
-.layout {
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.header {
+  margin-bottom: 80px;
+  text-align: center;
+}
+
+.header .section-subtitle { margin: 0 auto; }
+
+.body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  grid-template-columns: 1fr 380px 1fr;
+  gap: 60px;
   align-items: center;
 }
 
-/* ── Columna izquierda ──────────────────────── */
-.leftCol {}
-
-.leftCol .section-title {
-  color: var(--white) !important;
+/* ── Left ────────────────────────────────────────────── */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.leftCol .section-subtitle {
-  color: rgba(255,255,255,0.5) !important;
+.stat {}
+.statVal {
+  display: block;
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--teal);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.statLabel {
+  font-size: 0.85rem;
+  color: var(--gray);
+  letter-spacing: 0.02em;
 }
 
-/* ── Modelo 3D ──────────────────────────────── */
-.modelWrapper {
+.divider {
+  width: 40px;
+  height: 1.5px;
+  background: var(--border-t);
+}
+
+.leftText {
+  font-size: 0.92rem;
+  color: var(--gray);
+  line-height: 1.8;
+}
+
+/* ── Center model ────────────────────────────────────── */
+.modelWrap {
   position: relative;
-  margin-top: 40px;
-  height: 360px;
-}
-
-.modelBg {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  background: rgba(0,200,215,0.04);
-  border: 1px solid rgba(0,200,215,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modelCanvas {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--border-t);
   overflow: hidden;
+  background: radial-gradient(ellipse, rgba(0,200,215,0.06), transparent 70%);
 }
 
-.modelLabel {
+.modelRing {
   position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.72rem;
-  color: rgba(255,255,255,0.35);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  background: rgba(0,0,0,0.4);
-  padding: 4px 12px;
-  border-radius: 100px;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.06);
+  inset: -12px;
+  border-radius: 50%;
+  border: 1px dashed rgba(0,200,215,0.15);
+  animation: spin 20s linear infinite;
 }
 
-.modelOrbitLabel {
-  position: absolute;
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--teal);
-  background: rgba(0,200,215,0.08);
-  border: 1px solid rgba(0,200,215,0.2);
-  padding: 3px 8px;
-  border-radius: 100px;
-  letter-spacing: 0.06em;
-  animation: floatLabel 3s ease-in-out infinite;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-.modelOrbitLabel:nth-child(3) { animation-delay: 1s; }
-.modelOrbitLabel:nth-child(4) { animation-delay: 2s; }
-
-@keyframes floatLabel {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-/* ── Columna derecha: cards ─────────────────── */
+/* ── Right tags ──────────────────────────────────────── */
 .rightCol {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.techCard {
-  position: relative;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px;
-  padding: 28px 28px 24px;
-  overflow: hidden;
-  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+.tagsLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray-2);
+}
+
+.tagGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.techTag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1px solid color-mix(in srgb, var(--tc, #00c8d7) 25%, transparent);
+  color: var(--tc, #00c8d7);
+  background: color-mix(in srgb, var(--tc, #00c8d7) 7%, transparent);
+  transition: background 0.25s, transform 0.25s;
   cursor: default;
 }
 
-.techCard:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(0,200,215,0.2);
-  transform: translateX(6px);
+.techTag:hover {
+  background: color-mix(in srgb, var(--tc, #00c8d7) 14%, transparent);
+  transform: scale(1.04);
 }
 
-.cardTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.iconWrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  border: 1px solid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.techIcon {
-  font-size: 1.4rem;
-}
-
-.cardNumber {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: rgba(255,255,255,0.05);
-  font-family: monospace;
-  line-height: 1;
-}
-
-.techTitle {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 8px;
-}
-
-.techDesc {
-  font-size: 0.87rem;
-  color: rgba(255,255,255,0.5);
-  line-height: 1.7;
-  margin-bottom: 16px;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 100px;
-  border: 1px solid;
-  letter-spacing: 0.03em;
-}
-
-.cardBar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  opacity: 0.5;
-  border-radius: 0 2px 2px 0;
-  transition: opacity 0.3s;
-}
-
-.techCard:hover .cardBar {
-  opacity: 1;
-}
-
-/* ── Responsive ─────────────────────────────── */
-@media (max-width: 1024px) {
-  .layout {
-    grid-template-columns: 1fr;
-    gap: 48px;
-  }
-
-  .modelWrapper {
-    max-width: 480px;
-  }
-}
-
-@media (max-width: 640px) {
-  .modelWrapper {
-    height: 280px;
-  }
+@media (max-width: 1000px) {
+  .body { grid-template-columns: 1fr; gap: 48px; }
+  .modelCanvas { max-width: 300px; margin: 0 auto; }
+  .modelWrap { order: -1; }
 }

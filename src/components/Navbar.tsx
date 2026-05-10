@@ -1,92 +1,53 @@
 "use client";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Navbar.module.css";
 
 const links = [
-  { label: "Servicios", href: "#servicios" },
-  { label: "Industrias", href: "#tecnologia" },
-  { label: "Nosotros", href: "#sobre" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Servicios",   href: "#servicios" },
+  { label: "Tecnología",  href: "#tecnologia" },
+  { label: "Nosotros",    href: "#sobre" },
+  { label: "Valores",     href: "#valores" },
+  { label: "Contacto",    href: "#contacto" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleLink = (href: string) => {
-    setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <motion.nav
-      className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-    >
+    <nav ref={navRef} className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.inner}>
-        <a href="#" className={styles.logo}>
-          <span className={styles.logoIcon}>⚙</span>
+        <a href="#" className={styles.logo} data-cursor="expand">
+          <span className={styles.logoMark}>S</span>
           <span className={styles.logoText}>SUBLIM</span>
         </a>
 
-        <ul className={styles.links}>
-          {links.map((l) => (
-            <li key={l.label}>
-              <button onClick={() => handleLink(l.href)} className={styles.link}>
+        <ul className={`${styles.links} ${open ? styles.open : ""}`}>
+          {links.map(l => (
+            <li key={l.href}>
+              <a href={l.href} className={styles.link} onClick={() => setOpen(false)}>
                 {l.label}
-              </button>
+              </a>
             </li>
           ))}
         </ul>
 
-        <button onClick={() => handleLink("#contacto")} className={styles.cta}>
-          Cotizar Reunión
-        </button>
+        <a href="#contacto" className={`${styles.cta} btn btn-primary`} data-cursor="expand">
+          Cotizar Proyecto
+        </a>
 
-        <button className={styles.burger} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
-          <span className={menuOpen ? styles.burgerOpen : ""} />
-          <span className={menuOpen ? styles.burgerOpen : ""} />
-          <span className={menuOpen ? styles.burgerOpen : ""} />
+        <button className={`${styles.burger} ${open ? styles.burgerOpen : ""}`}
+          onClick={() => setOpen(v => !v)} aria-label="Menú">
+          <span /><span /><span />
         </button>
       </div>
-
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            className={styles.mobileMenu}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {links.map((l, i) => (
-              <motion.button
-                key={l.label}
-                onClick={() => handleLink(l.href)}
-                className={styles.mobileLink}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.07 }}
-              >
-                {l.label}
-              </motion.button>
-            ))}
-            <button onClick={() => handleLink("#contacto")} className={styles.mobileCta}>
-              Cotizar Reunión
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 }
