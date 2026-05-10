@@ -116,6 +116,20 @@
 
 .card:hover .cardBar { opacity: 1; }
 
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--c, var(--teal));
+  margin-top: 20px;
+  transition: gap 0.25s, opacity 0.25s;
+  opacity: 0.8;
+}
+
+.cardLink:hover { gap: 10px; opacity: 1; }
+
 .cardTop {
   display: flex;
   justify-content: space-between;

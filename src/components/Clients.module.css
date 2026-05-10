@@ -1,0 +1,110 @@
+.section {
+  position: relative;
+  padding: 100px 0;
+  background: #f0f4f8;
+  overflow: hidden;
+}
+
+.topLine {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,215,0.35), transparent);
+}
+
+.header {
+  margin-bottom: 60px;
+}
+
+.partnersLabel,
+.industriesLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+.industriesLabel { margin-top: 56px; }
+
+/* Partners */
+.partnersGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.partnerCard {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+  cursor: default;
+}
+
+.partnerCard:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+  border-color: rgba(0,200,215,0.25);
+}
+
+.partnerName {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.partnerRole {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #00c8d7;
+  text-transform: uppercase;
+}
+
+/* Industries */
+.industriesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.industryItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  transition: border-color 0.25s, background 0.25s, color 0.25s;
+  cursor: default;
+}
+
+.industryItem:hover {
+  border-color: rgba(0,200,215,0.3);
+  background: rgba(0,200,215,0.06);
+  color: #0f172a;
+}
+
+.industryIcon { font-size: 1.1rem; }
+.industryLabel { white-space: nowrap; }
+
+@media (max-width: 800px) {
+  .partnersGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .partnersGrid { grid-template-columns: 1fr 1fr; }
+}

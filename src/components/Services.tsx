@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useEffect } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Services.module.css";
@@ -11,6 +12,7 @@ const services = [
     num: "01",
     icon: "⚙",
     color: "#00c8d7",
+    slug: "automatizacion-industrial",
     title: "Automatización Industrial",
     desc: "Diseño e implementación de sistemas de automatización con PLC, SCADA y DCS para maximizar la eficiencia operacional y reducir costos de producción.",
     tags: ["PLC", "SCADA", "DCS", "HMI"],
@@ -19,6 +21,7 @@ const services = [
     num: "02",
     icon: "🔬",
     color: "#f97316",
+    slug: "control-de-procesos",
     title: "Control de Procesos",
     desc: "Ingeniería de control avanzada con lazos PID, control predictivo y optimización en tiempo real para procesos continuos y batch.",
     tags: ["PID", "MPC", "Control Predictivo"],
@@ -27,6 +30,7 @@ const services = [
     num: "03",
     icon: "🌐",
     color: "#22c55e",
+    slug: "integracion-scada",
     title: "Integración SCADA",
     desc: "Integración completa de sistemas de supervisión y adquisición de datos. Arquitecturas IoT industriales con conectividad cloud y edge computing.",
     tags: ["SCADA", "IoT", "OPC-UA", "Cloud"],
@@ -35,24 +39,27 @@ const services = [
     num: "04",
     icon: "📊",
     color: "#a855f7",
+    slug: "gestion-de-proyectos",
     title: "Gestión de Proyectos",
     desc: "Administración integral de proyectos bajo metodologías PMI y estándares internacionales. Desde la ingeniería básica hasta la puesta en marcha.",
-    tags: ["PMI", "FEED", "EPC", "Comisionado"],
+    tags: ["PMI", "FEED", "EPC", "Commissioning"],
   },
   {
     num: "05",
     icon: "🔧",
     color: "#ec4899",
+    slug: "mantenimiento-predictivo",
     title: "Mantenimiento Predictivo",
-    desc: "Implementación de estrategias de mantenimiento basadas en condición. Análisis de vibraciones, termografía y monitoreo continuo de activos.",
+    desc: "Estrategias CBM basadas en análisis de vibraciones, termografía y monitoreo continuo para predecir fallas y maximizar la disponibilidad.",
     tags: ["CBM", "Vibraciones", "Termografía"],
   },
   {
     num: "06",
     icon: "🎓",
     color: "#eab308",
+    slug: "capacitacion-tecnica",
     title: "Capacitación Técnica",
-    desc: "Programas de formación especializada para operadores, técnicos e ingenieros en tecnologías de automatización y control de procesos.",
+    desc: "Programas de formación especializada para operadores, técnicos e ingenieros. Modalidad presencial, e-learning y simulación en planta.",
     tags: ["Simulación", "E-Learning", "Certificación"],
   },
 ];
@@ -121,6 +128,13 @@ export default function Services() {
                   <span key={t} className={styles.tag} style={{ "--c": s.color } as React.CSSProperties}>{t}</span>
                 ))}
               </div>
+              <Link href={`/servicios/${s.slug}`} className={styles.cardLink}
+                style={{ "--c": s.color } as React.CSSProperties}>
+                Ver detalle
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </Link>
               <div className={styles.cardBar} style={{ background: s.color }} />
             </div>
           ))}

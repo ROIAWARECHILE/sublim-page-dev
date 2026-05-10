@@ -1,28 +1,50 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Navbar.module.css";
 
 const links = [
-  { label: "Servicios",   href: "#servicios" },
-  { label: "Tecnología",  href: "#tecnologia" },
-  { label: "Nosotros",    href: "#sobre" },
-  { label: "Valores",     href: "#valores" },
-  { label: "Contacto",    href: "#contacto" },
+  { label: "Servicios",  href: "#servicios" },
+  { label: "Tecnología", href: "#tecnologia" },
+  { label: "Proyectos",  href: "#proyectos" },
+  { label: "Nosotros",   href: "#sobre" },
+  { label: "Contacto",   href: "#contacto" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const navRef = useRef<HTMLElement>(null);
+  const [active, setActive]     = useState("");
+  const [open, setOpen]         = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => {
+      const y    = window.scrollY;
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      setScrolled(y > 60);
+      setProgress(docH > 0 ? y / docH : 0);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const ids  = links.map(l => l.href.slice(1));
+    const obs  = ids.map(id => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const o = new IntersectionObserver(
+        ([e]) => { if (e.isIntersecting) setActive("#" + id); },
+        { threshold: 0.25, rootMargin: "-80px 0px -50% 0px" }
+      );
+      o.observe(el);
+      return o;
+    });
+    return () => obs.forEach(o => o?.disconnect());
+  }, []);
+
   return (
-    <nav ref={navRef} className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
+    <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
+      <div className={styles.progressBar} style={{ transform: `scaleX(${progress})` }} />
       <div className={styles.inner}>
         <a href="#" className={styles.logo} data-cursor="expand">
           <span className={styles.logoMark}>S</span>
@@ -32,7 +54,9 @@ export default function Navbar() {
         <ul className={`${styles.links} ${open ? styles.open : ""}`}>
           {links.map(l => (
             <li key={l.href}>
-              <a href={l.href} className={styles.link} onClick={() => setOpen(false)}>
+              <a href={l.href}
+                className={`${styles.link} ${active === l.href ? styles.linkActive : ""}`}
+                onClick={() => setOpen(false)}>
                 {l.label}
               </a>
             </li>
